@@ -21,14 +21,8 @@
     <ClCompile Include="src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\maths_funcs.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\maths_funcs.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\teapot.h">
       <Filter>Header Files</Filter>
     </ClInclude>

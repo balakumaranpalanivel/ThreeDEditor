@@ -7,7 +7,6 @@
 #include <GL/freeglut.h>
 #include <iostream>
 
-#include "maths_funcs.h" //Anton's math class
 #include "teapot.h" // teapot mesh
 #include <string> 
 #include <fstream>
@@ -39,7 +38,7 @@ std::string readShaderSource(const std::string& fileName)
 	std::ifstream file(fileName.c_str()); 
 	if(file.fail()) {
 		cout << "error loading shader called " << fileName;
-		exit (1); 
+		//exit (1); 
 	} 
 	
 	std::stringstream stream;
@@ -56,7 +55,7 @@ static void AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum Shad
 
     if (ShaderObj == 0) {
         fprintf(stderr, "Error creating shader type %d\n", ShaderType);
-        exit(0);
+        //exit(0);
     }
 	std::string outShader = readShaderSource(pShaderText);
 	const char* pShaderSource = outShader.c_str();
@@ -72,7 +71,7 @@ static void AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum Shad
         GLchar InfoLog[1024];
         glGetShaderInfoLog(ShaderObj, 1024, NULL, InfoLog);
         fprintf(stderr, "Error compiling shader type %d: '%s'\n", ShaderType, InfoLog);
-        exit(1);
+        //exit(1);
     }
 	// Attach the compiled shader object to the program object
     glAttachShader(ShaderProgram, ShaderObj);
@@ -85,7 +84,7 @@ GLuint CompileShaders()
     shaderProgramID = glCreateProgram();
     if (shaderProgramID == 0) {
         fprintf(stderr, "Error creating shader program\n");
-        exit(1);
+        //exit(1);
     }
 
 	// Create two shader objects, one for the vertex, and one for the fragment shader
@@ -103,7 +102,7 @@ GLuint CompileShaders()
 	if (Success == 0) {
 		glGetProgramInfoLog(shaderProgramID, sizeof(ErrorLog), NULL, ErrorLog);
 		fprintf(stderr, "Error linking shader program: '%s'\n", ErrorLog);
-        exit(1);
+        //exit(1);
 	}
 
 	// program has been successfully linked but needs to be validated to check whether the program can execute given the current pipeline state
@@ -113,7 +112,7 @@ GLuint CompileShaders()
     if (!Success) {
         glGetProgramInfoLog(shaderProgramID, sizeof(ErrorLog), NULL, ErrorLog);
         fprintf(stderr, "Invalid shader program: '%s'\n", ErrorLog);
-        exit(1);
+        //exit(1);
     }
 	// Finally, use the linked shader program
 	// Note: this program will stay in effect for all draw calls until you replace it with another or explicitly disable its use
@@ -126,7 +125,51 @@ GLuint CompileShaders()
 // VBO Functions - click on + to expand
 #pragma region VBO_FUNCTIONS
 
+float grid_vertex_count = 0;
+float *grid_vertex_points;
 
+GLuint element_buffer_length = 0;
+GLuint *element_buffer;
+
+void drawGrid(int nHalfSize)
+{
+	grid_vertex_count = pow((nHalfSize * 2) + 1, 2);
+	grid_vertex_points = new float[grid_vertex_count*3];
+	int j = 0;
+	for (float x = -nHalfSize; x <= nHalfSize; x++)
+	{
+		for (float y = -nHalfSize; y <= nHalfSize; y++)
+		{
+			grid_vertex_points[j++] = x;
+			grid_vertex_points[j++] = 0;
+			grid_vertex_points[j++] = y;
+		}
+	}
+
+	j = 0;
+	int vertices_in_row = ((nHalfSize * 2) + 1);
+	element_buffer_length = ((2 * pow(vertices_in_row, 2)) - (2 * vertices_in_row)) * 2;
+	element_buffer = new GLuint[element_buffer_length];
+	for (int i = 0; i <= (grid_vertex_count - vertices_in_row); i += vertices_in_row)
+	{
+		for (int k = i; k <= (i + vertices_in_row) - 1; k++)
+		{
+			if (k != (i + vertices_in_row) - 1)
+			{
+				// 0 to 1
+				element_buffer[j++] = k;
+				element_buffer[j++] = k + 1;
+			}
+
+			if (k + vertices_in_row < grid_vertex_count)
+			{
+				// 0 to 3
+				element_buffer[j++] = k;
+				element_buffer[j++] = k + vertices_in_row;
+			}
+		}
+	}
+}
 
 
 
@@ -134,25 +177,33 @@ void generateObjectBufferTeapot () {
 	GLuint vp_vbo = 0;
 
 	loc1 = glGetAttribLocation(shaderProgramID, "vertex_position");
-	loc2 = glGetAttribLocation(shaderProgramID, "vertex_normals");
+	//loc2 = glGetAttribLocation(shaderProgramID, "vertex_normals");
 	
 	glGenBuffers (1, &vp_vbo);
 	glBindBuffer (GL_ARRAY_BUFFER, vp_vbo);
-	glBufferData (GL_ARRAY_BUFFER, 3 * teapot_vertex_count * sizeof (float), teapot_vertex_points, GL_STATIC_DRAW);
-	GLuint vn_vbo = 0;
-	glGenBuffers (1, &vn_vbo);
-	glBindBuffer (GL_ARRAY_BUFFER, vn_vbo);
-	glBufferData (GL_ARRAY_BUFFER, 3 * teapot_vertex_count * sizeof (float), teapot_normals, GL_STATIC_DRAW);
-  
+	//glBufferData (GL_ARRAY_BUFFER, 3 * teapot_vertex_count * sizeof (float), teapot_vertex_points, GL_STATIC_DRAW);
+	glBufferData (GL_ARRAY_BUFFER, 3 * grid_vertex_count * sizeof(float), grid_vertex_points, GL_STATIC_DRAW);
+
+	//GLuint vn_vbo = 0;
+	//glGenBuffers (1, &vn_vbo);
+	//glBindBuffer (GL_ARRAY_BUFFER, vn_vbo);
+	//glBufferData (GL_ARRAY_BUFFER, 3 * teapot_vertex_count * sizeof (float), teapot_normals, GL_STATIC_DRAW);
+
 	glGenVertexArrays (1, &teapot_vao);
 	glBindVertexArray (teapot_vao);
 
 	glEnableVertexAttribArray (loc1);
 	glBindBuffer (GL_ARRAY_BUFFER, vp_vbo);
 	glVertexAttribPointer (loc1, 3, GL_FLOAT, GL_FALSE, 0, NULL);
-	glEnableVertexAttribArray (loc2);
-	glBindBuffer (GL_ARRAY_BUFFER, vn_vbo);
-	glVertexAttribPointer (loc2, 3, GL_FLOAT, GL_FALSE, 0, NULL);
+
+	// Element buffer object
+	GLuint ebo;
+	glGenBuffers(1, &ebo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, element_buffer_length * sizeof(GLuint), element_buffer, GL_STATIC_DRAW);
+	//glEnableVertexAttribArray (loc2);
+	//glBindBuffer (GL_ARRAY_BUFFER, vn_vbo);
+	//glVertexAttribPointer (loc2, 3, GL_FLOAT, GL_FALSE, 0, NULL);
 }
 
 
@@ -179,15 +230,17 @@ void display(){
 	//The model transform rotates the object by 45 degrees, the view transform sets the camera at -40 on the z-axis, and the perspective projection is setup using Antons method
 
 	// bottom-left
-	mat4 view = translate (identity_mat4 (), vec3 (0.0, 0.0, -40.0));
-	mat4 persp_proj = perspective(45.0, (float)width/(float)height, 0.1, 100.0);
-	mat4 model = rotate_z_deg (identity_mat4 (), 45);
+	glm::mat4 view = glm::lookAt(glm::vec3(4, 3, -5), //(4, 30, -50),
+						glm::vec3(0, 0, 0),
+						glm::vec3(0, 1, 0));
+	glm::mat4 persp_proj = glm::perspective<float>(45.0, (float)width / (float)height, 0.1, 300.0);
+	glm::mat4 model = glm::mat4();
 
-	glViewport (0, 0, width / 2, height / 2);
-	glUniformMatrix4fv (proj_mat_location, 1, GL_FALSE, persp_proj.m);
-	glUniformMatrix4fv (view_mat_location, 1, GL_FALSE, view.m);
-	glUniformMatrix4fv (matrix_location, 1, GL_FALSE, model.m);
-	glDrawArrays (GL_TRIANGLES, 0, teapot_vertex_count);
+	glUniformMatrix4fv (proj_mat_location, 1, GL_FALSE, &persp_proj[0][0]);
+	glUniformMatrix4fv (view_mat_location, 1, GL_FALSE, &view[0][0]);
+	glUniformMatrix4fv (matrix_location, 1, GL_FALSE, &model[0][0]);
+
+	glDrawElements(GL_LINES, element_buffer_length, GL_UNSIGNED_INT, 0);
 
 	// bottom-right
 		
@@ -227,12 +280,17 @@ void init()
 	// Set up the shaders
 	GLuint shaderProgramID = CompileShaders();
 
+	// TODO: Load 3D Model from a seperate file
+
 	// load teapot mesh into a vertex buffer array
 	generateObjectBufferTeapot ();
 	
 }
 
 int main(int argc, char** argv){
+
+	//call it like this
+	drawGrid(10);
 
 	// Set up the window
 	glutInit(&argc, argv);

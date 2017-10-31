@@ -132,10 +132,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\maths_funcs.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\maths_funcs.h" />
     <ClInclude Include="src\teapot.h" />
   </ItemGroup>
   <ItemGroup>
