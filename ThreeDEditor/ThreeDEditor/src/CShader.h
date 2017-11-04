@@ -1,4 +1,5 @@
 #pragma once
+// TODO: Update all name of all the data memebers of the class to preced "m"
 
 #include <GL/glew.h>
 #include <GL/freeglut.h>
