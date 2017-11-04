@@ -17,8 +17,19 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/transform.hpp>
 
+#include "CShader.h"
+#include "CCamera.h"
+#include "CModel.h"
+
 // Macro for indexing vertex buffer
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
+const unsigned int SCR_WIDTH = 800;
+const unsigned int SCR_HEIGHT = 600;
+
+CCamera camera(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, 0.0f));
+float lastX = SCR_WIDTH / 2.0f;
+float lastY = SCR_HEIGHT / 2.0f;
+bool firstMouse = true;
 
 using namespace std;
 GLuint shaderProgramID;
@@ -209,6 +220,8 @@ void generateObjectBufferTeapot () {
 
 #pragma endregion VBO_FUNCTIONS
 
+CShader ourShader;
+CModel ourModel;
 
 void display(){
 
@@ -219,34 +232,54 @@ void display(){
 	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glUseProgram (shaderProgramID);
 
+	////Declare your uniform variables that will be used in your shader
+	//int matrix_location = glGetUniformLocation (shaderProgramID, "model");
+	//int view_mat_location = glGetUniformLocation (shaderProgramID, "view");
+	//int proj_mat_location = glGetUniformLocation (shaderProgramID, "proj");
+	//
 
-	//Declare your uniform variables that will be used in your shader
-	int matrix_location = glGetUniformLocation (shaderProgramID, "model");
-	int view_mat_location = glGetUniformLocation (shaderProgramID, "view");
-	int proj_mat_location = glGetUniformLocation (shaderProgramID, "proj");
-	
+	////Here is where the code for the viewport lab will go, to get you started I have drawn a t-pot in the bottom left
+	////The model transform rotates the object by 45 degrees, the view transform sets the camera at -40 on the z-axis, and the perspective projection is setup using Antons method
 
-	//Here is where the code for the viewport lab will go, to get you started I have drawn a t-pot in the bottom left
-	//The model transform rotates the object by 45 degrees, the view transform sets the camera at -40 on the z-axis, and the perspective projection is setup using Antons method
+	//// bottom-left
+	//glm::mat4 view = glm::lookAt(glm::vec3(4, 3, -5), //(4, 30, -50),
+	//					glm::vec3(0, 0, 0),
+	//					glm::vec3(0, 1, 0));
+	//glm::mat4 persp_proj = glm::perspective<float>(45.0, (float)width / (float)height, 0.1, 300.0);
+	//glm::mat4 model = glm::mat4();
 
-	// bottom-left
-	glm::mat4 view = glm::lookAt(glm::vec3(4, 3, -5), //(4, 30, -50),
-						glm::vec3(0, 0, 0),
-						glm::vec3(0, 1, 0));
-	glm::mat4 persp_proj = glm::perspective<float>(45.0, (float)width / (float)height, 0.1, 300.0);
-	glm::mat4 model = glm::mat4();
+	//glUniformMatrix4fv (proj_mat_location, 1, GL_FALSE, &persp_proj[0][0]);
+	//glUniformMatrix4fv (view_mat_location, 1, GL_FALSE, &view[0][0]);
+	//glUniformMatrix4fv (matrix_location, 1, GL_FALSE, &model[0][0]);
 
-	glUniformMatrix4fv (proj_mat_location, 1, GL_FALSE, &persp_proj[0][0]);
-	glUniformMatrix4fv (view_mat_location, 1, GL_FALSE, &view[0][0]);
-	glUniformMatrix4fv (matrix_location, 1, GL_FALSE, &model[0][0]);
+	//glDrawElements(GL_LINES, element_buffer_length, GL_UNSIGNED_INT, 0);
 
-	glDrawElements(GL_LINES, element_buffer_length, GL_UNSIGNED_INT, 0);
+	//// bottom-right
+	//	
+	//// top-left
 
-	// bottom-right
-		
-	// top-left
+	//// top-right
 
-	// top-right
+	//// render
+	//// ------
+	//glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
+	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	// don't forget to enable shader before setting uniforms
+	ourShader.Use();
+
+	// view/projection transformations
+	glm::mat4 projection = glm::perspective<float>(45.0, (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+	glm::mat4 view = camera.mView;
+	ourShader.SetMat4("projection", projection);
+	ourShader.SetMat4("view", view);
+
+	//// render the loaded model
+	glm::mat4 model;
+	model = glm::translate(model, glm::vec3(0.0f, -1.75f, 0.0f)); // translate it down so it's at the center of the scene
+	model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));	// it's a bit too big for our scene, so scale it down
+	ourShader.SetMat4("model", model);
+	ourModel.Draw(ourShader);
 
     glutSwapBuffers();
 }
@@ -278,42 +311,81 @@ void init()
 			1.0f, 0.0f, 0.0f, 1.0f,
 			0.0f, 0.0f, 1.0f, 1.0f};
 	// Set up the shaders
-	GLuint shaderProgramID = CompileShaders();
+	//GLuint shaderProgramID = CompileShaders();
+	ourShader.LoadShaders("../ThreeDEditor/src/shaders/modelLoadingVertexShader.txt",
+		"../ThreeDEditor/src/shaders/modelLoadingFragmentShader.txt");
 
 	// TODO: Load 3D Model from a seperate file
+	ourModel.LoadModel("../Assets/Models/nanosuit/nanosuit.obj");
 
 	// load teapot mesh into a vertex buffer array
-	generateObjectBufferTeapot ();
+	//generateObjectBufferTeapot ();
 	
 }
 
-int main(int argc, char** argv){
+//int main(int argc, char** argv){
+//
+//	//call it like this
+//	//drawGrid(10);
+//
+//	// Set up the window
+//	glutInit(&argc, argv);
+//    glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGB);
+//    glutInitWindowSize(width, height);
+//    glutCreateWindow("Viewport Teapots");
+//	// Tell glut where the display function is
+//	glutDisplayFunc(display);
+//
+//	//ourShader.LoadShaders("../ThreeDEditor/src/shaders/modelLoadingVertexShader.txt",
+//	//	"../ThreeDEditor/src/shaders/modelLoadingFragmentShader.txt");
+//
+//	//ourModel.LoadModel("../Assets/Models/nanosuit/nanosuit.obj");
+//	//glutIdleFunc(updateScene);
+//
+//	 // A call to glewInit() must be done after glut is initialized!
+//	glewExperimental = GL_TRUE; //for non-lab machines, this line gives better modern GL support
+//    GLenum res = glewInit();
+//	// Check for any errors
+//    if (res != GLEW_OK) {
+//      fprintf(stderr, "Error: '%s'\n", glewGetErrorString(res));
+//      return 1;
+//    }
+//
+//	// draw in wireframe
+//	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+//
+//	// Set up your objects and shaders
+//	//init();
+//	// Begin infinite event loop
+//	glutMainLoop();
+//    return 0;
+//}
 
-	//call it like this
-	drawGrid(10);
+int main(int argc, char** argv) {
 
 	// Set up the window
 	glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGB);
-    glutInitWindowSize(width, height);
-    glutCreateWindow("Viewport Teapots");
+	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
+	glutInitWindowSize(width, height);
+	glutCreateWindow("Viewport Teapots");
+
 	// Tell glut where the display function is
 	glutDisplayFunc(display);
-	glutIdleFunc(updateScene);
 
-	 // A call to glewInit() must be done after glut is initialized!
+	// A call to glewInit() must be done after glut is initialized!
 	glewExperimental = GL_TRUE; //for non-lab machines, this line gives better modern GL support
-    GLenum res = glewInit();
+	GLenum res = glewInit();
 	// Check for any errors
-    if (res != GLEW_OK) {
-      fprintf(stderr, "Error: '%s'\n", glewGetErrorString(res));
-      return 1;
-    }
+	if (res != GLEW_OK) {
+		fprintf(stderr, "Error: '%s'\n", glewGetErrorString(res));
+		return 1;
+	}
 	// Set up your objects and shaders
 	init();
+
 	// Begin infinite event loop
 	glutMainLoop();
-    return 0;
+	return 0;
 }
 
 

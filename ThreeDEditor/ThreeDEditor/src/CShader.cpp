@@ -1,6 +1,16 @@
 #include "CShader.h"
 
+CShader::CShader()
+{
+
+}
+
 CShader::CShader(const GLchar* vertexPath, const GLchar* fragmentPath)
+{
+	LoadShaders(vertexPath, fragmentPath);
+}
+
+void CShader::LoadShaders(const GLchar* vertexPath, const GLchar* fragmentPath)
 {
 	// Read the shader code from the source files
 	std::string vertexCode;
@@ -15,7 +25,7 @@ CShader::CShader(const GLchar* vertexPath, const GLchar* fragmentPath)
 	{
 		// open the files
 		vShaderFile.open(vertexPath);
-		vShaderFile.open(fragmentPath);
+		fShaderFile.open(fragmentPath);
 
 		std::stringstream vShaderStream, fShaderStream;
 		// read file contents into streams
@@ -109,4 +119,13 @@ void CShader::SetFloat(const std::string &name, float value) const
 		glGetUniformLocation(glnProgramID, name.c_str()),
 		value
 	);
+}
+
+void CShader::SetMat4(const std::string &name, glm::mat4 value) const
+{
+	glUniformMatrix4fv(
+		glGetUniformLocation(glnProgramID, name.c_str()),
+		1,
+		GL_FALSE,
+		glm::value_ptr(value));
 }

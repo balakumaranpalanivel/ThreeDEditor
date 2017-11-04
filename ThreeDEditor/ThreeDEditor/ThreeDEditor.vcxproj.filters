@@ -30,6 +30,9 @@
     <ClCompile Include="src\CModel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\CCamera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\teapot.h">
@@ -50,12 +53,21 @@
     <ClInclude Include="src\CModel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\CCamera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="src\shaders\simpleFragmentShader.txt">
       <Filter>Shaders</Filter>
     </Text>
     <Text Include="src\shaders\simpleVertexShader.txt">
+      <Filter>Shaders</Filter>
+    </Text>
+    <Text Include="src\shaders\modelLoadingFragmentShader.txt">
+      <Filter>Shaders</Filter>
+    </Text>
+    <Text Include="src\shaders\modelLoadingVertexShader.txt">
       <Filter>Shaders</Filter>
     </Text>
   </ItemGroup>

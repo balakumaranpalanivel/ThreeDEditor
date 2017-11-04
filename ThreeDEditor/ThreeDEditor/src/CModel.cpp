@@ -1,5 +1,12 @@
-#include "CModel.h"
+#pragma once
 
+#include "CModel.h"
+#include <stb_image.h>
+
+CModel::CModel()
+{
+
+}
 
 CModel::CModel(char* path)
 {
@@ -118,7 +125,7 @@ std::vector<CTexture> CModel::LoadMaterialTextures(aiMaterial *material, aiTextu
 		aiString str;
 		material->GetTexture(type, i, &str);
 		bool isSkip = false;
-		for (unsigned int j = 0; i < vTexturesLoaded.size(); j++)
+ 		for (unsigned int j = 0; j < vTexturesLoaded.size(); j++)
 		{
 			if (std::strcmp(vTexturesLoaded[j].filePath.C_Str(), str.C_Str()) == 0)
 			{
