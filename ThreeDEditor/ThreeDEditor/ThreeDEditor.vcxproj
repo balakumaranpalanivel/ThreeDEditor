@@ -132,15 +132,25 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\CCamera.cpp" />
+    <ClCompile Include="src\CComponent.cpp" />
     <ClCompile Include="src\CMesh.cpp" />
     <ClCompile Include="src\CModel.cpp" />
+    <ClCompile Include="src\CObject.cpp" />
+    <ClCompile Include="src\CRenderEngine.cpp" />
+    <ClCompile Include="src\CScene.cpp" />
+    <ClCompile Include="src\CSceneController.cpp" />
     <ClCompile Include="src\CShader.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\CCamera.h" />
+    <ClInclude Include="src\CComponent.h" />
     <ClInclude Include="src\CMesh.h" />
     <ClInclude Include="src\CModel.h" />
+    <ClInclude Include="src\CObject.h" />
+    <ClInclude Include="src\CRenderEngine.h" />
+    <ClInclude Include="src\CScene.h" />
+    <ClInclude Include="src\CSceneController.h" />
     <ClInclude Include="src\CShader.h" />
     <ClInclude Include="src\CTexture.h" />
     <ClInclude Include="src\CVertex.h" />

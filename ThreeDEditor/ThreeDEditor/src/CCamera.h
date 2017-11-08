@@ -3,6 +3,11 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+#include <GL/glew.h>
+#include <GL/freeglut.h>
+
+#include <iostream>
+
 class CCamera
 {
 public:
@@ -29,4 +34,6 @@ public:
 	// LookAt matrix of the camera to transform world co-ordinates into view space
 	glm::mat4 mView;
 
+	// Process Keyboard Input
+	void ProcessKeyboardInput(unsigned char key, int x, int y);
 };

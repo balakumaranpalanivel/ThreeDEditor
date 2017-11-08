@@ -14,5 +14,15 @@ CCamera::CCamera(glm::vec3 cameraPosition, glm::vec3 lookAtPosition)
 
 	mCameraUp = glm::normalize(glm::cross(mCameraDirection, mCameraRight));
 
-	mView = glm::lookAt(cameraPosition, glm::vec3(0.0f, 0.0f, 0.0f), mCameraUp);
+	mView = glm::lookAt(cameraPosition, 
+		glm::vec3(0.0f, 0.0f, 0.0f), mCameraUp);
+
+}
+
+void CCamera::ProcessKeyboardInput(unsigned char key, int x, int y)
+{
+	if (key == 'x') {
+		//Translate the base, etc.
+		std::cout << "KEY PRESSED \n";
+	}
 }
