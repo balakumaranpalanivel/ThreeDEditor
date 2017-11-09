@@ -118,7 +118,7 @@ void display(){
 
 	//// render the loaded model
 	glm::mat4 model;
-	model = glm::translate(model, glm::vec3(0.0f, -1.75f, 0.0f)); // translate it down so it's at the center of the scene
+	model = glm::translate(model, glm::vec3(0.0f, -1.0f, 0.0f)); // translate it down so it's at the center of the scene
 	model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));	// it's a bit too big for our scene, so scale it down
 	ourShader.SetMat4("model", model);
 	ourModel.Draw(ourShader);
@@ -135,48 +135,51 @@ void init()
 		"../ThreeDEditor/src/shaders/modelLoadingFragmentShader.txt");
 
 	// TODO: Load 3D Model from a seperate file
-	ourModel.LoadModel("../Assets/Models/nanosuit/nanosuit.obj");
+	//ourModel.LoadModel("../Assets/Models/nanosuit/nanosuit.obj");
+
+	ourModel.LoadModel("../Assets/Models/crate/Crate1.3ds");
+
 	
 }
 
 int main(int argc, char** argv) {
 
-	//// Set up the window
-	//glutInit(&argc, argv);
-	//glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
-	//glutInitWindowSize(width, height);
-	//glutCreateWindow("Viewport Teapots");
+	// Set up the window
+	glutInit(&argc, argv);
+	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
+	glutInitWindowSize(width, height);
+	glutCreateWindow("Viewport Teapots");
 
-	//// Tell glut where the display function is
-	////glutDisplayFunc(display);
+	// Tell glut where the display function is
+	glutDisplayFunc(display);
 
-	//// A call to glewInit() must be done after glut is initialized!
-	//glewExperimental = GL_TRUE; //for non-lab machines, this line gives better modern GL support
-	//GLenum res = glewInit();
-	//// Check for any errors
-	//if (res != GLEW_OK) {
-	//	fprintf(stderr, "Error: '%s'\n", glewGetErrorString(res));
-	//	return 1;
-	//}
-	//// Set up your objects and shaders
-	////init();
+	// A call to glewInit() must be done after glut is initialized!
+	glewExperimental = GL_TRUE; //for non-lab machines, this line gives better modern GL support
+	GLenum res = glewInit();
+	// Check for any errors
+	if (res != GLEW_OK) {
+		fprintf(stderr, "Error: '%s'\n", glewGetErrorString(res));
+		return 1;
+	}
+	// Set up your objects and shaders
+	init();
 
-	//// Begin infinite event loop
-	//glutMainLoop();
-	//return 0;
+	// Begin infinite event loop
+	glutMainLoop();
+	return 0;
 	
 
-	ThreeDEditor threeDEditor(SCR_WIDTH, SCR_HEIGHT, glm::vec2(-1, -1));
+	//ThreeDEditor threeDEditor(SCR_WIDTH, SCR_HEIGHT, glm::vec2(-1, -1));
 
-	threeDEditor.CreateGLUTWindow(argc, argv);
-	threeDEditor.InitialiseGLUT();
-	threeDEditor.RegisterRenderCallback();
+	//threeDEditor.CreateGLUTWindow(argc, argv);
+	//threeDEditor.InitialiseGLUT();
+	//threeDEditor.RegisterRenderCallback();
 
-	threeDEditor.InitialiseGLUT();
+	//threeDEditor.InitialiseGLUT();
 
-	threeDEditor.Run();
+	//threeDEditor.Run();
 
-	return 0;
+	//return 0;
 }
 
 

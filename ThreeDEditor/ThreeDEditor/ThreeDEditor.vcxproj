@@ -142,6 +142,7 @@
     <ClCompile Include="src\CShader.cpp" />
     <ClCompile Include="src\ThreeDEditor.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\CCamera.h" />
@@ -154,6 +155,7 @@
     <ClInclude Include="src\CSceneController.h" />
     <ClInclude Include="src\CShader.h" />
     <ClInclude Include="src\CTexture.h" />
+    <ClInclude Include="src\CTransform.h" />
     <ClInclude Include="src\CVertex.h" />
     <ClInclude Include="src\ThreeDEditor.h" />
     <ClInclude Include="src\teapot.h" />
