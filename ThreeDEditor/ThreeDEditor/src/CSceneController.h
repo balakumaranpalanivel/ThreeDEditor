@@ -3,6 +3,8 @@
 #include "CScene.h"
 #include "CRenderEngine.h"
 
+class CObject;
+
 class CSceneController
 {
 public:
@@ -15,11 +17,10 @@ public:
 	//void Update(float delta);
 	static void RenderScene();
 
+	static CScene mScene;
+	static CRenderEngine mRenderEngine;
 
 private:
 	CSceneController();
-
-	static CScene mScene;
-	static CRenderEngine mRenderEngine;
 };
 

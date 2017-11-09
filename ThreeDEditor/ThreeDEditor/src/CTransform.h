@@ -8,6 +8,9 @@
 class CTransform
 {
 public:
+	
+	CTransform() {};
+
 	CTransform(const glm::vec3& pos, const glm::quat& rot, glm::vec3 scale);
 
 	glm::mat4 GetTransformation() const;

@@ -21,7 +21,7 @@ public:
 			std::vector<GLuint> indices,
 			std::vector<CTexture> textures);
 
-	void Draw(CShader shader);
+	void Draw(CShader* shader);
 
 	~CMesh();
 

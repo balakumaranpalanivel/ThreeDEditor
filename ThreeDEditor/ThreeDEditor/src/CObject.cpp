@@ -32,7 +32,7 @@ void CObject::Render(CShader* shader, CRenderEngine* renderEngine)
 {
 	for (unsigned int i = 0; i <= mComponents.size(); i++)
 	{
-		mComponents[i]->Render(shader, renderEngine);
+		mComponents[i]->Render(shader);
 	}
 }
 

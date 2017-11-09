@@ -19,12 +19,12 @@ void CRenderEngine::AddCamera(CCamera* camera)
 void CRenderEngine::AddShader(CShader* shader)
 {
 	mMainShader = shader;
-}
+} 
 
-void CRenderEngine::Render(CScene* scene)
+void CRenderEngine::Render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	scene->RenderAll(mMainShader, this);
+	mSceneToRender->RenderAll(mMainShader, this);
 
 	// TODO: Lights
 	//glEnable(GL_BLEND);

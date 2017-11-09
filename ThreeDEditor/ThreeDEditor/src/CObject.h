@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include "CTransform.h"
 
 class CRenderEngine;
 class CShader;
@@ -19,6 +20,8 @@ public:
 	void RenderAll(CShader* shader, CRenderEngine* renderEngine);
 
 	std::vector<CObject*> GetAllAttached();
+
+	inline CTransform& GetTransform() { return mTransform; }
 	
 private:
 
@@ -28,6 +31,6 @@ private:
 
 	std::vector<CObject*> mChildren;
 	std::vector<CComponent*> mComponents;
-
+	CTransform mTransform;
 
 };

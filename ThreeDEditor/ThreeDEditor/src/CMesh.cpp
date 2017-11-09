@@ -56,7 +56,7 @@ void CMesh::SetupMesh()
 	glBindVertexArray(0);
 }
 
-void CMesh::Draw(CShader shader)
+void CMesh::Draw(CShader* shader)
 {
 	unsigned int diffuseNr = 1;
 	unsigned int specularNr = 1;
@@ -79,7 +79,7 @@ void CMesh::Draw(CShader shader)
 
 		number = ss.str();
 
-		shader.SetFloat(("material." + name + number).c_str(), i);
+		shader->SetFloat(("material." + name + number).c_str(), i);
 		glBindTexture(GL_TEXTURE_2D, vTextures[i].nID);
 	}
 

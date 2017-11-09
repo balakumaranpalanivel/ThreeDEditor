@@ -132,7 +132,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\CCamera.cpp" />
-    <ClCompile Include="src\CComponent.cpp" />
     <ClCompile Include="src\CMesh.cpp" />
     <ClCompile Include="src\CModel.cpp" />
     <ClCompile Include="src\CObject.cpp" />
@@ -142,7 +141,7 @@
     <ClCompile Include="src\CShader.cpp" />
     <ClCompile Include="src\ThreeDEditor.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\Transform.cpp" />
+    <ClCompile Include="src\CTransform.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\CCamera.h" />

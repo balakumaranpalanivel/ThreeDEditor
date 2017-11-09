@@ -45,10 +45,10 @@
     <ClCompile Include="src\CRenderEngine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\CComponent.cpp">
+    <ClCompile Include="src\ThreeDEditor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ThreeDEditor.cpp">
+    <ClCompile Include="src\CTransform.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -90,6 +90,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\ThreeDEditor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CTransform.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

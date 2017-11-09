@@ -3,17 +3,20 @@
 #include "CObject.h"
 #include "CShader.h"
 
+class CTransform;
 class CRenderEngine;
 
 // TODO: Transform
 class CComponent
 {
 public:
-	virtual ~CComponent();
+	virtual ~CComponent() {};
 
-	virtual void Render(CShader* shader, CRenderEngine* renderEngine);
+	virtual void Render(CShader* shader) {};
 
-	void SetParent(CObject* parent);
+	inline void SetParent(CObject* parent) { mParent = parent;  };
+	inline CTransform& GetTransform() { return mParent->GetTransform(); }
+	inline const CTransform& GetTransform() const{ return mParent->GetTransform(); }
 
 	// We need parents location to render the new component
 	// GetTransform

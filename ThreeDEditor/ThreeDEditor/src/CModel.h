@@ -17,13 +17,15 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-class CModel
+#include "CComponent.h"
+
+class CModel : public CComponent
 {
 public:
 	CModel();
 	CModel(char *path);
-	void Draw(CShader shader);
 	void LoadModel(std::string path);
+	void Render(CShader* shader);
 
 private:
 	std::vector<CMesh> vMeshes;

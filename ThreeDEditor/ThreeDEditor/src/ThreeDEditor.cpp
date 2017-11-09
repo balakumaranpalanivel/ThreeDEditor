@@ -1,6 +1,13 @@
 #include "ThreeDEditor.h"
 #include "CSceneController.h"
 
+#include "CShader.h"
+#include "CCamera.h"
+#include "CModel.h"
+
+#include "CRenderEngine.h"
+#include "CObject.h"
+
 #include <GL/glew.h>
 #include <GL/freeglut.h>
 
@@ -43,7 +50,12 @@ void ThreeDEditor::InitialiseGLUT()
 
 void ThreeDEditor::InitialiseScene()
 {
-	// TODO:
+	CObject* masterChief = new CObject();
+	masterChief->AddComponent(new CModel("../Assets/Models/nanosuit/nanosuit.obj"));
+	masterChief->GetTransform().SetPos(glm::vec3(0.0f, -1.0f, 0.0f));
+	masterChief->GetTransform().SetScale(glm::vec3(0.2f, 0.2f, 0.2f));
+
+	CSceneController::mScene.AddToScene(masterChief);
 }
 
 void ThreeDEditor::RegisterRenderCallback()

@@ -7,18 +7,13 @@ CScene::CScene()
 
 CScene::~CScene()
 {
-	for (unsigned int i = 0; i < mChildren.size(); i++)
-	{
-		if (mChildren[i])
-		{
-			delete mChildren[i];
-		}
-	}
-}
-
-void CScene::AddChild(CObject* object)
-{
-	mChildren.push_back(object);
+	//for (unsigned int i = 0; i < mChildren.size(); i++)
+	//{
+	//	if (mChildren[i])
+	//	{
+	//		delete mChildren[i];
+	//	}
+	//}
 }
 
 //void CScene::InputAll(float delta)
@@ -50,11 +45,11 @@ void CScene::RenderAll(CShader* shader, CRenderEngine* renderEngine)
 	// Update Itself
 	Render(shader, renderEngine);
 
-	for (unsigned int i = 0; i < mChildren.size(); i++)
-	{
-		// Update all its children
-		mChildren[i]->RenderAll(shader, renderEngine);
-	}
+	//for (unsigned int i = 0; i < mChildren.size(); i++)
+	//{
+	//	// Update all its children
+	//	mChildren[i]->RenderAll(shader, renderEngine);
+	//}
 }
 
 //void CScene::Input(float delta)
@@ -72,16 +67,16 @@ void CScene::Render(CShader* shader, CRenderEngine* renderEngine)
 
 }
 
-std::vector<CObject*> CScene::GetAllAttached()
-{
-	std::vector<CObject*> result;
-
-	for (unsigned int i = 0; i < mChildren.size(); i++)
-	{
-		std::vector<CObject*> childObjects = mChildren[i]->GetAllAttached();
-		result.insert(result.end(), childObjects.begin(), childObjects.end());
-	}
-
-	//result.push_back(this);
-	return result;
-}
+//std::vector<CObject*> CScene::GetAllAttached()
+//{
+//	std::vector<CObject*> result;
+//
+//	for (unsigned int i = 0; i < mChildren.size(); i++)
+//	{
+//		std::vector<CObject*> childObjects = mChildren[i]->GetAllAttached();
+//		result.insert(result.end(), childObjects.begin(), childObjects.end());
+//	}
+//
+//	//result.push_back(this);
+//	return result;
+//}

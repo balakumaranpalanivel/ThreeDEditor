@@ -27,6 +27,11 @@ void CSceneController::InitialiseScene()
 
 void CSceneController::RenderScene()
 {
+	mRenderEngine.AddScene(&CSceneController::mScene);
+
+	// Extract shader from game object in scene
+
+	
 	// TODO - START RENDERING
-	//mRenderEngine.Render(&mScene);
+	mRenderEngine.Render();
 }

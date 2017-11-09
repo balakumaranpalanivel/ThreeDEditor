@@ -13,7 +13,7 @@ CModel::CModel(char* path)
 	LoadModel(path);
 }
 
-void CModel::Draw(CShader shader)
+void CModel::Render(CShader* shader)
 {
 	for (unsigned int i = 0; i < vMeshes.size(); i++)
 	{
