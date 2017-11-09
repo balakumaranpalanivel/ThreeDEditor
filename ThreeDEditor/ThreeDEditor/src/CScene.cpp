@@ -64,7 +64,7 @@ void CScene::RenderAll(CShader* shader, CRenderEngine* renderEngine)
 
 void CScene::Render(CShader* shader, CRenderEngine* renderEngine)
 {
-
+	mRoot.RenderAll(shader, renderEngine);
 }
 
 //std::vector<CObject*> CScene::GetAllAttached()

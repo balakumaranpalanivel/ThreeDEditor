@@ -1,4 +1,5 @@
 #include "CShader.h"
+#include "CRenderEngine.h"
 
 CShader::CShader()
 {
@@ -128,4 +129,17 @@ void CShader::SetMat4(const std::string &name, glm::mat4 value) const
 		1,
 		GL_FALSE,
 		glm::value_ptr(value));
+}
+
+void CShader::UpdateUniforms(const CTransform& transform, CRenderEngine* renderEngine)
+{
+	glm::mat4 modelMatrix = transform.GetTransformation();
+	glm::mat4 viewMatrix = renderEngine->GetMainCamera().GetViewMatrix();
+	glm::mat4 projectedMatrix = renderEngine->GetMainCamera().GetProjectionMatrix();
+
+	// Set the matrix values to corressponding uniforms
+	this->SetMat4("projection", projectedMatrix);
+	this->SetMat4("view", viewMatrix);
+	this->SetMat4("model", modelMatrix);
+
 }

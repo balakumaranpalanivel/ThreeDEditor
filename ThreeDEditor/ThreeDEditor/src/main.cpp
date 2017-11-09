@@ -30,7 +30,6 @@
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
-CCamera camera(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = true;
@@ -144,20 +143,21 @@ int main(int argc, char** argv) {
 
 	threeDEditor.InitialiseScene();
 
-	CShader ourShader;
-	CShader ourShader1;
-	CModel ourModel("../Assets/Models/nanosuit/nanosuit.obj");
-	CModel ourModel1("../Assets/Models/crate/Crate1.3ds");
+
+	//CShader ourShader;
+	//CShader ourShader1;
+	//CModel ourModel("../Assets/Models/nanosuit/nanosuit.obj");
+	//CModel ourModel1("../Assets/Models/crate/Crate1.3ds");
 
 	//CModel ourModel;
 	//CModel ourModel1;
 
 	// Set up your objects and shaders
-	ourShader.LoadShaders("../ThreeDEditor/src/shaders/modelLoadingVertexShader.txt",
-		"../ThreeDEditor/src/shaders/modelLoadingFragmentShader.txt");
+	//ourShader.LoadShaders("../ThreeDEditor/src/shaders/modelLoadingVertexShader.txt",
+	//	"../ThreeDEditor/src/shaders/modelLoadingFragmentShader.txt");
 
-	ourShader1.LoadShaders("../ThreeDEditor/src/shaders/modelLoadingVertexShader.txt",
-		"../ThreeDEditor/src/shaders/modelLoadingFragmentShader.txt");
+	//ourShader1.LoadShaders("../ThreeDEditor/src/shaders/modelLoadingVertexShader.txt",
+	//	"../ThreeDEditor/src/shaders/modelLoadingFragmentShader.txt");
 
 	//// TODO: Load 3D Model from a seperate file
 	//ourModel.LoadModel("../Assets/Models/nanosuit/nanosuit.obj");
@@ -172,37 +172,38 @@ int main(int argc, char** argv) {
 	glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	// don't forget to enable shader before setting uniforms
-	ourShader.Use();
-	ourShader1.Use();
+	threeDEditor.RegisterRenderCallback();
+	threeDEditor.Run();
 
-	// view/projection transformations
-	glm::mat4 projection = glm::perspective<float>(45.0, (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-	glm::mat4 view = camera.mView;
+	//// don't forget to enable shader before setting uniforms
+	//ourShader.Use();
+	//ourShader1.Use();
 
-	ourShader.SetMat4("projection", projection);
-	ourShader.SetMat4("view", view);
+	//// view/projection transformations
+	//glm::mat4 projection = glm::perspective<float>(45.0, (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+	//glm::mat4 view = camera.GetViewMatrix();
 
-	//// render the loaded model
-	glm::mat4 model;
-	model = glm::translate(model, glm::vec3(0.0f, -1.0f, 0.0f)); // translate it down so it's at the center of the scene
-	model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));	// it's a bit too big for our scene, so scale it down
-	ourShader.SetMat4("model", model);
-	ourModel.Render(&ourShader);
+	//ourShader.SetMat4("projection", projection);
+	//ourShader.SetMat4("view", view);
 
-	glm::mat4 model1;
-	model1 = glm::translate(model1, glm::vec3(0.0f, -1.0f, 0.0f)); // translate it down so it's at the center of the scene
-	model1 = glm::scale(model1, glm::vec3(1.0f, 1.0f, 1.0f));	// it's a bit too big for our scene, so scale it down
-	ourShader.SetMat4("projection", projection);
-	ourShader.SetMat4("view", view);
-	ourShader1.SetMat4("model", model1);
-	ourModel1.Render(&ourShader1);
+	////// render the loaded model
+	//glm::mat4 model;
+	//model = glm::translate(model, glm::vec3(0.0f, -1.0f, 0.0f)); // translate it down so it's at the center of the scene
+	//model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));	// it's a bit too big for our scene, so scale it down
+	//ourShader.SetMat4("model", model);
+	//ourModel.Render(&ourShader);
 
-	glutSwapBuffers();
+	//glm::mat4 model1;
+	//model1 = glm::translate(model1, glm::vec3(0.0f, -1.0f, 0.0f)); // translate it down so it's at the center of the scene
+	//model1 = glm::scale(model1, glm::vec3(1.0f, 1.0f, 1.0f));	// it's a bit too big for our scene, so scale it down
+	//ourShader.SetMat4("projection", projection);
+	//ourShader.SetMat4("view", view);
+	//ourShader1.SetMat4("model", model1);
+	//ourModel1.Render(&ourShader1);
 
 
 	// Begin infinite event loop
-	glutMainLoop();
+	//glutMainLoop();
 	return 0;
 	
 

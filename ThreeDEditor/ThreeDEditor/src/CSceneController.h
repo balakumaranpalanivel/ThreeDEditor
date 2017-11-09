@@ -4,11 +4,13 @@
 #include "CRenderEngine.h"
 
 class CObject;
+// TODO: Friend Function
 
 class CSceneController
 {
 public:
 
+	CSceneController();
 
 	// Use this function to initialise current scene
 	static void InitialiseScene();
@@ -18,9 +20,7 @@ public:
 	static void RenderScene();
 
 	static CScene mScene;
-	static CRenderEngine mRenderEngine;
-
-private:
-	CSceneController();
+	static CShader* ourShader;
+	static CRenderEngine* mRenderEngine;
 };
 

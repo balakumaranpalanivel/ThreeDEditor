@@ -8,12 +8,18 @@
 
 #include <iostream>
 
-class CCamera
+#include "CComponent.h"
+
+class CCamera : public CComponent
 {
 public:
 	//Constructor
 	CCamera(glm::vec3 cameraPosition, glm::vec3 lookAtPosition);
 
+	glm::mat4 GetViewMatrix();
+	glm::mat4 GetProjectionMatrix();
+
+private:
 	// Position of the camera
 	glm::vec3 mCameraPosition;
 
@@ -34,6 +40,9 @@ public:
 	// LookAt matrix of the camera to transform world co-ordinates into view space
 	glm::mat4 mView;
 
-	// Process Keyboard Input
-	void ProcessKeyboardInput(unsigned char key, int x, int y);
+	// Projection matrix of the camera
+	glm::mat4 mProjection;
+
+	//// Process Keyboard Input
+	//void ProcessKeyboardInput(unsigned char key, int x, int y);
 };

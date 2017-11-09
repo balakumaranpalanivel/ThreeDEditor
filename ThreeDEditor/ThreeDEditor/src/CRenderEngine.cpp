@@ -1,25 +1,22 @@
 #include "CRenderEngine.h"
 #include "CScene.h"
+#include "CCamera.h"
 
 CRenderEngine::CRenderEngine()
 {
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
+	glFrontFace(GL_CW);
+	glCullFace(GL_BACK);
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_DEPTH_CLAMP);
 }
 
 CRenderEngine::~CRenderEngine()
 {
 
 }
-
-void CRenderEngine::AddCamera(CCamera* camera)
-{
-	mMainCamera = camera;
-}
-
-void CRenderEngine::AddShader(CShader* shader)
-{
-	mMainShader = shader;
-} 
 
 void CRenderEngine::Render()
 {

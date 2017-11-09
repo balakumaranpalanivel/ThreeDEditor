@@ -153,6 +153,7 @@
     <ClInclude Include="src\CScene.h" />
     <ClInclude Include="src\CSceneController.h" />
     <ClInclude Include="src\CShader.h" />
+    <ClInclude Include="src\CSimpleRenderer.h" />
     <ClInclude Include="src\CTexture.h" />
     <ClInclude Include="src\CTransform.h" />
     <ClInclude Include="src\CVertex.h" />

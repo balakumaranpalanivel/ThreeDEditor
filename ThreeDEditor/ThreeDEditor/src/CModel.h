@@ -17,9 +17,9 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-#include "CComponent.h"
+//#include "CComponent.h"
 
-class CModel : public CComponent
+class CModel
 {
 public:
 	CModel();

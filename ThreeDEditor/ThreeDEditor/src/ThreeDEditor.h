@@ -1,5 +1,6 @@
 #pragma once
 #include <glm/glm.hpp>
+#include "CSceneController.h"
 
 class ThreeDEditor
 {
@@ -21,5 +22,6 @@ private:
 	unsigned int mWidth;
 	unsigned int mHeight;
 	glm::vec2 mWindowPosition;
+	CSceneController mSceneController;
 	
 };

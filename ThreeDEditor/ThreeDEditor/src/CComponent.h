@@ -12,7 +12,7 @@ class CComponent
 public:
 	virtual ~CComponent() {};
 
-	virtual void Render(CShader* shader) {};
+	virtual void Render(CShader* shader, CRenderEngine* renderEngine) {};
 
 	inline void SetParent(CObject* parent) { mParent = parent;  };
 	inline CTransform& GetTransform() { return mParent->GetTransform(); }

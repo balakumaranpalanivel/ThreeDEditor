@@ -1,5 +1,6 @@
 #include "ThreeDEditor.h"
 #include "CSceneController.h"
+#include "CSimpleRenderer.h"
 
 #include "CShader.h"
 #include "CCamera.h"
@@ -17,7 +18,6 @@ ThreeDEditor::ThreeDEditor(unsigned int width, unsigned int height,
 	mHeight(height),
 	mWindowPosition(windowPosition)
 {
-
 }
 
 ThreeDEditor::~ThreeDEditor()
@@ -50,17 +50,15 @@ void ThreeDEditor::InitialiseGLUT()
 
 void ThreeDEditor::InitialiseScene()
 {
-	CObject* masterChief = new CObject();
-	masterChief->AddComponent(new CModel("../Assets/Models/nanosuit/nanosuit.obj"));
-	masterChief->GetTransform().SetPos(glm::vec3(0.0f, -1.0f, 0.0f));
-	masterChief->GetTransform().SetScale(glm::vec3(0.2f, 0.2f, 0.2f));
-
-	CSceneController::mScene.AddToScene(masterChief);
+	mSceneController.InitialiseScene();
+	//CSceneController::mScene.AddToScene(masterChief);
 }
 
 void ThreeDEditor::RegisterRenderCallback()
 {
 	glutDisplayFunc(CSceneController::RenderScene);
+	CSceneController::RenderScene();
+	glutSwapBuffers();
 }
 
 void ThreeDEditor::Run()
