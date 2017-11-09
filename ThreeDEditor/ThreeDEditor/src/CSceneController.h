@@ -6,23 +6,20 @@
 class CSceneController
 {
 public:
-	CSceneController();
-	virtual ~CSceneController();
+
 
 	// Use this function to initialise current scene
-	virtual void InitialiseScene();
+	static void InitialiseScene();
 
 	//void Input(float delta);
 	//void Update(float delta);
-	void Render(CRenderEngine* renderEngine);
+	static void RenderScene();
 
-	CScene& GetScene();
 
 private:
+	CSceneController();
 
-	// Private Copy constructor
-	CSceneController(CSceneController& sceneController);
-	void operator=(CSceneController& sceneController);
-
-	CScene mScene;
+	static CScene mScene;
+	static CRenderEngine mRenderEngine;
 };
+

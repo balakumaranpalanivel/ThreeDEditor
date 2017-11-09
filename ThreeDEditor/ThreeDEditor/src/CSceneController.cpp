@@ -1,25 +1,14 @@
 
 #include "CSceneController.h"
 
+CRenderEngine CSceneController::mRenderEngine;
+CScene CSceneController::mScene;
+
 CSceneController::CSceneController()
 {
 
 }
 
-CSceneController::~CSceneController()
-{
-
-}
-
-CSceneController::CSceneController(CSceneController& sceneController)
-{
-
-}
-
-void CSceneController::operator=(CSceneController& CSceneController)
-{
-
-}
 
 void CSceneController::InitialiseScene()
 {
@@ -36,12 +25,8 @@ void CSceneController::InitialiseScene()
 //	mScene.UpdatAll(delta);
 //}
 
-void CSceneController::Render(CRenderEngine* renderEngine)
+void CSceneController::RenderScene()
 {
-	renderEngine->Render(&mScene);
-}
-
-CScene& CSceneController::GetScene()
-{
-	return mScene;
+	// TODO - START RENDERING
+	//mRenderEngine.Render(&mScene);
 }

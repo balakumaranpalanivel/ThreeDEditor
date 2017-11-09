@@ -3,6 +3,7 @@
 
 class CRenderEngine;
 class CShader;
+class CComponent;
 
 // TODO: Implement constructor
 
@@ -13,6 +14,8 @@ public:
 	virtual ~CObject() {}
 
 	void AddChild(CObject* child);
+	void AddComponent(CComponent* component);
+
 	void RenderAll(CShader* shader, CRenderEngine* renderEngine);
 
 	std::vector<CObject*> GetAllAttached();
@@ -24,6 +27,7 @@ private:
 	void Render(CShader* shader, CRenderEngine* renderEngine);
 
 	std::vector<CObject*> mChildren;
+	std::vector<CComponent*> mComponents;
 
 
 };
