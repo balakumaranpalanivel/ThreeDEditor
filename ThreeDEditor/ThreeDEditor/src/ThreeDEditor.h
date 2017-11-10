@@ -14,6 +14,8 @@ public:
 
 	void InitialiseScene();
 	void RegisterRenderCallback();
+	void RegisterKeypressCallback();
+	void RegisterIdleCallback();
 
 	void Run();
 

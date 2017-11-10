@@ -58,7 +58,16 @@ void ThreeDEditor::RegisterRenderCallback()
 {
 	glutDisplayFunc(CSceneController::RenderScene);
 	CSceneController::RenderScene();
-	glutSwapBuffers();
+}
+
+void ThreeDEditor::RegisterIdleCallback()
+{
+	glutIdleFunc(CSceneController::UpdateScene);
+}
+
+void ThreeDEditor::RegisterKeypressCallback()
+{
+	glutKeyboardFunc(CSceneController::HandleKeypress);
 }
 
 void ThreeDEditor::Run()

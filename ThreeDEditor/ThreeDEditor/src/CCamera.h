@@ -19,6 +19,10 @@ public:
 	glm::mat4 GetViewMatrix();
 	glm::mat4 GetProjectionMatrix();
 
+	void HandleKeypress(unsigned char key, int x, int y);
+
+	void Update();
+
 private:
 	// Position of the camera
 	glm::vec3 mCameraPosition;
@@ -37,12 +41,16 @@ private:
 	// Right Direction - world space
 	glm::vec3 mCameraRight;
 
+	// Camera Front - To Move the camera front
+	glm::vec3 mCameraFront;
+
 	// LookAt matrix of the camera to transform world co-ordinates into view space
 	glm::mat4 mView;
 
 	// Projection matrix of the camera
 	glm::mat4 mProjection;
 
+	float mCameraSpeed;
 	//// Process Keyboard Input
 	//void ProcessKeyboardInput(unsigned char key, int x, int y);
 };

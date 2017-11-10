@@ -18,6 +18,9 @@ public:
 	//void Input(float delta);
 	//void Update(float delta);
 	static void RenderScene();
+	static void UpdateScene();
+
+	static void HandleKeypress(unsigned char key, int x, int y);
 
 	static CScene mScene;
 	static CShader* ourShader;

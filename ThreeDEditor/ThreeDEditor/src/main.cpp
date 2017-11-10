@@ -173,6 +173,9 @@ int main(int argc, char** argv) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	threeDEditor.RegisterRenderCallback();
+	threeDEditor.RegisterKeypressCallback();
+	threeDEditor.RegisterIdleCallback();
+
 	threeDEditor.Run();
 
 	//// don't forget to enable shader before setting uniforms
