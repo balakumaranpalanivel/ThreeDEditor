@@ -18,11 +18,9 @@
 #include <glm/gtx/transform.hpp>
 
 #include "CShader.h"
-#include "CCamera.h"
 #include "CModel.h"
 
 // Macro for indexing vertex buffer
-#define BUFFER_OFFSET(i) ((char *)NULL + (i))
 const unsigned int SCR_WIDTH = 1200;
 const unsigned int SCR_HEIGHT = 600;
 
@@ -30,49 +28,40 @@ float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 
 using namespace std;
-GLuint shaderProgramID;
-
-unsigned int teapot_vao = 0;
-int width = 1600.0;
-int height = 600.0;
-GLuint loc1;
-GLuint loc2;
-
-// VBO Functions - click on + to expand
-#pragma region VBO_FUNCTIONS
-
-float grid_vertex_count = 0;
-float *grid_vertex_points;
-
-GLuint element_buffer_length = 0;
-GLuint *element_buffer;
 
 CShader ourShader;
 CModel ourModel;
 
-CCamera camera(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, 0.0f));
-
+// Camera
 glm::mat4 projection = glm::perspective<float>(45.0, ((float)(SCR_WIDTH/2) / (float)(SCR_HEIGHT)), 0.1f, 100.0f);
-//glm::mat4 projection = glm::ortho<float>(0, 400, 0, 400, -1, 1);
 
 glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
 glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 
-glm::mat4 view = camera.mView;
+glm::mat4 view = glm::lookAt(cameraPos, glm::vec3(0.0f, 0.0f, 0.0f), cameraUp);
 
 glm::vec3 translateVector = glm::vec3(0.0f, -1.75f, 0.0f);
 glm::vec3 scaleVector = glm::vec3(0.2f, 0.2f, 0.2f);
 
-//// render the loaded model
 glm::mat4 model;
 glm::mat4 orthoProjection;
 glm::mat4 orthoView;
 
-// it's a bit too big for our scene, so scale it down
-
+static double  last_time = 0;
+float radius = 10.0f;
+double curr_time;
+double delta;
 bool firstMouse = true;
+
+/*
+	Declaring initiali values for the Euler angles
+	Not defining "roll" angle for camera
+*/
+// Yaw is rotation of the object about the Y axis (look left/right)
 float yaw = -90.0f;	// yaw is initialized to -90.0 degrees since a yaw of 0.0 results in a direction vector pointing to the right so we initially rotate a bit to the left.
+
+// Pitch is rotation of the object about the x axis (look up/down)
 float pitch = 0.0f;
 
 void display(){
@@ -84,6 +73,7 @@ void display(){
 	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	ourShader.Use();
 
+	// Perspective projection viewport
 	glViewport(0, 0, SCR_WIDTH / 2, SCR_HEIGHT);
 	ourShader.SetMat4("projection", projection);
 	ourShader.SetMat4("view", view);
@@ -91,9 +81,9 @@ void display(){
 	ourShader.SetVec3("viewPos", cameraPos);
 	ourModel.Draw(ourShader);
 
+	// Orthographic projection viewport
 	glViewport(SCR_WIDTH/2, 0, SCR_WIDTH / 2, SCR_HEIGHT);
-	orthoProjection = glm::ortho<float>(-2.0f, 2.0f, -2.0f, 2.0f, 0.0f, 200.0f);
-
+	orthoProjection = glm::ortho<float>(-2.0f, 2.0f, -2.0f, 2.0f, -200.0f, 200.0f);
 	ourShader.SetMat4("projection", orthoProjection);
 	orthoView = glm::lookAt(
 		glm::vec3(1.0f, 1.5f, 1.5f),
@@ -103,45 +93,22 @@ void display(){
 	ourShader.SetMat4("model", model);
 	ourShader.SetVec3("viewPos", cameraPos);
 	ourModel.Draw(ourShader);
-	// don't forget to enable shader before setting uniforms
-
-	// view/projection transformations
-	//ourShader.SetMat4("projection", projection);
-	//ourShader.SetMat4("view", view);
-	//ourShader.SetMat4("model", model);
-	//ourModel.Draw(ourShader);
-
- //   glutSwapBuffers();
 }
-#define PI 3.14159265
-static double  last_time = 0;
-float radius = 10.0f;
-double constant = PI / 180;
-double curr_time;
-double delta;
+
 void updateScene() 
 {	
-
 	// Wait until at least 16ms passed since start of last frame (Effectively caps framerate at ~60fps)
 	curr_time = timeGetTime();
 	delta = (curr_time - last_time);
 	if (delta > 16.0f)
 	{
-	
-		/*float camX = sin(timeGetTime()) * radius * 0.3;
-		float camZ = cos(timeGetTime()) * radius * 0.3;
-		view = glm::lookAt(
-			glm::vec3(camX, 0.0f, camZ),
-			glm::vec3(0.0f, 0.0f, 0.0f),
-			glm::vec3(0.0f, 1.0f, 0.0f)
-		);*/
-
+		// Update the view matrix to move the camera based on user input
 		view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
 
+		// Constantly rotate the model about the Y axis
 		model = glm::rotate<float>(model, 0.01, glm::vec3(0.0f, 1.0f, 0.0f));
 		
 		last_time = curr_time;
-	
 	}
 
 	glutSwapBuffers();
@@ -150,24 +117,39 @@ void updateScene()
 	glutPostRedisplay();
 }
 
-void keyCB(unsigned char key, int x, int y)	/* called on key press */
+/*
+Keypress functionality that implementes
+	1. Camera Flyover on pressing w, a, s, d keys
+	2. Translates the Model on pressing of 'i'
+*/
+void keyCB(unsigned char key, int x, int y)
 {
+	// Translate the model on key press of 'i'
+	// The model always moves in the front direction it is facing
 	if (key == 'i')
 	{
-		/*projection = glm::perspective<float>(90.0, (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);*/
-		// Moves in the front direction
-		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 1.0f));
-		//model = glm::rotate<float>(model, 30, glm::vec3(0.0f, 1.0f, 0.0f));
-		//model = glm::scale(model, glm::vec3();
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.2f));
 	}
 
-	float cameraSpeed = 0.05f; // adjust accordingly
+	// Camer flyover in the viewport
+	float cameraSpeed = 0.05f;
+
+	/*
+		To move the camera front and back we add/subtract a "delta"
+		obtained by (speed * cameraFrontDirection) to the current position 
+		of the camera
+	*/
 	if ( key == 'w')
 		cameraPos += cameraSpeed * cameraFront;
 
 	if ( key == 's')
 		cameraPos -= cameraSpeed * cameraFront;
 
+	/*
+		Similar to the front and back movement we add/subtract a "delta" to current
+		camera position. But the direction of movement (left/right) is obtained
+		by cross product of the cameraUp and cameraFront directions.
+	*/
 	if ( key == 'd')
 		cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
 
@@ -177,8 +159,17 @@ void keyCB(unsigned char key, int x, int y)	/* called on key press */
 	glutPostRedisplay();
 }
 
-void mouse_callback(int xpos, int ypos)
+/*
+Mouse click and drag functionality
+	1. Pans the camera by computing Pitch and Yaw
+*/
+void mouseCB(int xpos, int ypos)
 {
+	/*
+		Save the mouse position of the last frame
+		and compute the pitch and yaw based on the 
+		mouse position in the current frame
+	*/
 	if (firstMouse)
 	{
 		lastX = xpos;
@@ -186,24 +177,43 @@ void mouse_callback(int xpos, int ypos)
 		firstMouse = false;
 	}
 	
+	/*
+		Compute the offse - change in mouse position
+		and update the last frame mouse positions to 
+		current frame
+	*/
 	float xoffset = xpos - lastX;
 	float yoffset = lastY - ypos;
 	lastX = xpos;
 	lastY = ypos;
 
+	/*
+		Add a sensitivity factor to smoothen the offset
+		angles
+	*/
 	float sensitivity = 0.1;
 	xoffset *= sensitivity;
 	yoffset *= sensitivity;
 
+	/*
+		Increase the yaw and pitch 
+	*/
 	yaw += xoffset;
 	pitch += yoffset;
 
+	/*
+		Constraint the camera view angles
+	*/
 	if (pitch > 89.0f)
 		pitch = 89.0f;
 
 	if (pitch < -89.0f)
 		pitch = -89.0f;
 
+	/*
+		Converting the Yaw and Pitch angles to camera front direction 
+		vector
+	*/
 	glm::vec3 front;
 	front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
 	front.y = sin(glm::radians(pitch));
@@ -213,27 +223,18 @@ void mouse_callback(int xpos, int ypos)
 
 void init()
 {
-	// Create 3 vertices that make up a triangle that fits on the viewport 
-	GLfloat vertices[] = {-1.0f, -1.0f, 0.0f, 1.0,
-			1.0f, -1.0f, 0.0f, 1.0, 
-			0.0f, 1.0f, 0.0f, 1.0};
-	// Create a color array that identfies the colors of each vertex (format R, G, B, A)
-	GLfloat colors[] = {0.0f, 1.0f, 0.0f, 1.0f,
-			1.0f, 0.0f, 0.0f, 1.0f,
-			0.0f, 0.0f, 1.0f, 1.0f};
 	// Set up the shaders
-	//GLuint shaderProgramID = CompileShaders();
 	ourShader.LoadShaders("../ThreeDEditor/src/shaders/modelLoadingVertexShader.txt",
 		"../ThreeDEditor/src/shaders/modelLoadingFragmentShader.txt");
 
-	// TODO: Load 3D Model from a seperate file
+	// Load 3D Model from a seperate file
 	ourModel.LoadModel("../Assets/Models/nanosuit/nanosuit.obj");
-	model = glm::translate(model, translateVector); // translate it down so it's at the center of the scene
-	model = glm::scale(model, scaleVector);
 
-	// load teapot mesh into a vertex buffer array
-	//generateObjectBufferTeapot ();
-	
+	// translate it down so it's at the center of the scene
+	model = glm::translate(model, translateVector);
+
+	// scale the model to fit the viewports
+	model = glm::scale(model, scaleVector);	
 }
 
 int main(int argc, char** argv) {
@@ -242,27 +243,30 @@ int main(int argc, char** argv) {
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
 	glutInitWindowSize(SCR_WIDTH, SCR_HEIGHT);
-	glutCreateWindow("Viewport Teapots");
+	glutCreateWindow("ThreeDEditor");
 
-	// Tell glut where the display function is
+	// Register GLUT Callback functions
 	glutDisplayFunc(display);
 	glutIdleFunc(updateScene);
-	glutKeyboardFunc(keyCB);		/* set window's key callback */
-	glutMotionFunc(mouse_callback);
+	glutKeyboardFunc(keyCB);		
+	glutMotionFunc(mouseCB);
 
 	// A call to glewInit() must be done after glut is initialized!
-	glewExperimental = GL_TRUE; //for non-lab machines, this line gives better modern GL support
+	// for non-lab machines, this line gives better modern GL suppor
+	glewExperimental = GL_TRUE; 
 	GLenum res = glewInit();
 	// Check for any errors
 	if (res != GLEW_OK) {
 		fprintf(stderr, "Error: '%s'\n", glewGetErrorString(res));
 		return 1;
 	}
+
 	// Set up your objects and shaders
 	init();
 
 	// Begin infinite event loop
 	glutMainLoop();
+
 	return 0;
 }
 

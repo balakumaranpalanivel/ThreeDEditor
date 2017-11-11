@@ -131,14 +131,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\CCamera.cpp" />
     <ClCompile Include="src\CMesh.cpp" />
     <ClCompile Include="src\CModel.cpp" />
     <ClCompile Include="src\CShader.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\CCamera.h" />
     <ClInclude Include="src\CMesh.h" />
     <ClInclude Include="src\CModel.h" />
     <ClInclude Include="src\CShader.h" />
