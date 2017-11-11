@@ -7,7 +7,6 @@
 #include <GL/freeglut.h>
 #include <iostream>
 
-#include "teapot.h" // teapot mesh
 #include <string> 
 #include <fstream>
 #include <iostream>

@@ -32,9 +32,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\teapot.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\CMesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -52,12 +49,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="src\shaders\simpleFragmentShader.txt">
-      <Filter>Shaders</Filter>
-    </Text>
-    <Text Include="src\shaders\simpleVertexShader.txt">
-      <Filter>Shaders</Filter>
-    </Text>
     <Text Include="src\shaders\modelLoadingFragmentShader.txt">
       <Filter>Shaders</Filter>
     </Text>
