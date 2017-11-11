@@ -28,7 +28,6 @@ const unsigned int SCR_HEIGHT = 600;
 
 float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
-bool firstMouse = true;
 
 using namespace std;
 GLuint shaderProgramID;
@@ -50,6 +49,7 @@ GLuint *element_buffer;
 
 CShader ourShader;
 CModel ourModel;
+
 CCamera camera(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 
 glm::mat4 projection = glm::perspective<float>(45.0, ((float)(SCR_WIDTH/2) / (float)(SCR_HEIGHT)), 0.1f, 100.0f);
@@ -66,15 +66,21 @@ glm::vec3 scaleVector = glm::vec3(0.2f, 0.2f, 0.2f);
 
 //// render the loaded model
 glm::mat4 model;
+glm::mat4 orthoProjection;
+glm::mat4 orthoView;
 
 // it's a bit too big for our scene, so scale it down
+
+bool firstMouse = true;
+float yaw = -90.0f;	// yaw is initialized to -90.0 degrees since a yaw of 0.0 results in a direction vector pointing to the right so we initially rotate a bit to the left.
+float pitch = 0.0f;
 
 void display(){
 
 	// tell GL to only draw onto a pixel if the shape is closer to the viewer
 	glEnable (GL_DEPTH_TEST); // enable depth-testing
 	glDepthFunc (GL_LESS); // depth-testing interprets a smaller value as "closer"
-	glClearColor (0.37f, 0.38f, 0.4f, 1.0f);
+	glClearColor (0.15f, 0.15f, 0.15f, 1.0f);
 	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	ourShader.Use();
 
@@ -86,17 +92,17 @@ void display(){
 	ourModel.Draw(ourShader);
 
 	glViewport(SCR_WIDTH/2, 0, SCR_WIDTH / 2, SCR_HEIGHT);
-	glm::mat4 orthoProjection = glm::ortho<float>(-2.0f, 2.0f, -2.0f, 2.0f, 0.0f, 200.0f);
+	orthoProjection = glm::ortho<float>(-2.0f, 2.0f, -2.0f, 2.0f, 0.0f, 200.0f);
 
 	ourShader.SetMat4("projection", orthoProjection);
-	glm::mat4 orthoView = glm::lookAt(
+	orthoView = glm::lookAt(
 		glm::vec3(1.0f, 1.5f, 1.5f),
 		glm::vec3(0, 0, 0),
 		cameraUp);
 	ourShader.SetMat4("view", orthoView);
 	ourShader.SetMat4("model", model);
+	ourShader.SetVec3("viewPos", cameraPos);
 	ourModel.Draw(ourShader);
-
 	// don't forget to enable shader before setting uniforms
 
 	// view/projection transformations
@@ -132,7 +138,10 @@ void updateScene()
 
 		view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
 
+		model = glm::rotate<float>(model, 0.01, glm::vec3(0.0f, 1.0f, 0.0f));
+		
 		last_time = curr_time;
+	
 	}
 
 	glutSwapBuffers();
@@ -146,7 +155,9 @@ void keyCB(unsigned char key, int x, int y)	/* called on key press */
 	if (key == 'i')
 	{
 		/*projection = glm::perspective<float>(90.0, (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);*/
-		model = glm::translate(model, glm::vec3(1.0f, 0.0f, 0.0f));
+		// Moves in the front direction
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 1.0f));
+		//model = glm::rotate<float>(model, 30, glm::vec3(0.0f, 1.0f, 0.0f));
 		//model = glm::scale(model, glm::vec3();
 	}
 
@@ -158,12 +169,46 @@ void keyCB(unsigned char key, int x, int y)	/* called on key press */
 		cameraPos -= cameraSpeed * cameraFront;
 
 	if ( key == 'd')
-		cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
-
-	if ( key == 'a')
 		cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
 
+	if ( key == 'a')
+		cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+
 	glutPostRedisplay();
+}
+
+void mouse_callback(int xpos, int ypos)
+{
+	if (firstMouse)
+	{
+		lastX = xpos;
+		lastY = ypos;
+		firstMouse = false;
+	}
+	
+	float xoffset = xpos - lastX;
+	float yoffset = lastY - ypos;
+	lastX = xpos;
+	lastY = ypos;
+
+	float sensitivity = 0.1;
+	xoffset *= sensitivity;
+	yoffset *= sensitivity;
+
+	yaw += xoffset;
+	pitch += yoffset;
+
+	if (pitch > 89.0f)
+		pitch = 89.0f;
+
+	if (pitch < -89.0f)
+		pitch = -89.0f;
+
+	glm::vec3 front;
+	front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+	front.y = sin(glm::radians(pitch));
+	front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+	cameraFront = glm::normalize(front);
 }
 
 void init()
@@ -183,7 +228,6 @@ void init()
 
 	// TODO: Load 3D Model from a seperate file
 	ourModel.LoadModel("../Assets/Models/nanosuit/nanosuit.obj");
-
 	model = glm::translate(model, translateVector); // translate it down so it's at the center of the scene
 	model = glm::scale(model, scaleVector);
 
@@ -204,6 +248,7 @@ int main(int argc, char** argv) {
 	glutDisplayFunc(display);
 	glutIdleFunc(updateScene);
 	glutKeyboardFunc(keyCB);		/* set window's key callback */
+	glutMotionFunc(mouse_callback);
 
 	// A call to glewInit() must be done after glut is initialized!
 	glewExperimental = GL_TRUE; //for non-lab machines, this line gives better modern GL support

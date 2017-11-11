@@ -9,11 +9,9 @@ in vec3 ViewPos;
 uniform sampler2D texture_diffuse1;
 void main()
 {    
-	// Ambient Shading
-    //FragColor = (vec4(1.0f, 1.0f, 0.0f, 0.0f)) * texture(texture_diffuse1, TexCoords);
 
 	vec3 lightColor = vec3(1.0f, 1.0f, 1.0f);
-	float ambientPower = 0.1;
+	float ambientPower = 0.01;
 	vec3 ambient = ambientPower * lightColor;
 
 	vec3 lightPos = vec3(0.0f, 0.0f, 3.0f);
@@ -29,6 +27,4 @@ void main()
 	vec3 specular = specularStrength * spec * lightColor;
 
 	FragColor = (vec4(ambient, 1.0f) + vec4(diffuse, 1.0f) + vec4(specular, 1.0f)) * texture(texture_diffuse1, TexCoords);
-
-	//FragColor = (vec4(ambient, 1.0f)) * texture(texture_diffuse1, TexCoords);
 }
