@@ -86,10 +86,11 @@ void display(){
 	ourModel.Draw(ourShader);
 
 	glViewport(SCR_WIDTH/2, 0, SCR_WIDTH / 2, SCR_HEIGHT);
-	glm::mat4 orthoProjection = glm::ortho(0.0f, 800.0f, 600.0f, 0.0f, -500.0f, 500.0f);
-	ourShader.SetMat4("projection", projection);
+	glm::mat4 orthoProjection = glm::ortho<float>(-2.0f, 2.0f, -2.0f, 2.0f, 0.0f, 200.0f);
+
+	ourShader.SetMat4("projection", orthoProjection);
 	glm::mat4 orthoView = glm::lookAt(
-		glm::vec3(3.0f, 0.0f, 3.0f),
+		glm::vec3(1.0f, 1.5f, 1.5f),
 		glm::vec3(0, 0, 0),
 		cameraUp);
 	ourShader.SetMat4("view", orthoView);
