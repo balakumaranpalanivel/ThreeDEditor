@@ -2,10 +2,42 @@
 out vec4 FragColor;
 
 in vec2 TexCoords;
+in vec3 ANormal;
+in vec3 FragPos;
+in vec3 ViewPos;
 
 uniform sampler2D texture_diffuse1;
-
 void main()
 {    
-    FragColor = texture(texture_diffuse1, TexCoords);
+
+	// Lighting computation 
+	// colorAtPixel = (ambient + diffuse + specular) * colorOfObject
+
+	// Defining light - color(white), position, direction
+	// TODO_Future - Define Light in scene and pass it to the shader
+	vec3 lightColor = vec3(1.0f, 1.0f, 1.0f);
+	vec3 lightPos = vec3(0.0f, 0.0f, 3.0f);
+	vec3 lightDir = normalize(lightPos - FragPos);
+
+	// BEGIN - Ambient light
+	float ambientPower = 0.01;
+	vec3 ambient = ambientPower * lightColor;
+	// END - Ambient light
+
+	// BEGIN - Diffuse Effect
+	vec3 norm = normalize(ANormal);
+	float diff = max(dot(norm, lightDir), 0.0);
+	vec3 diffuse = diff * lightColor;
+	// END - Diffuse Effect
+
+	// BEGIN - Specular Effect
+	float specularStrength = 1.5;
+	vec3 viewDir = normalize(ViewPos - FragPos);
+	vec3 reflectDir = reflect(-lightDir, norm);
+	float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
+	vec3 specular = specularStrength * spec * lightColor;
+	// END - Specular Effect
+
+	// Compute the final color combining all the components
+	FragColor = (vec4(ambient, 1.0f) + vec4(diffuse, 1.0f) + vec4(specular, 1.0f)) * texture(texture_diffuse1, TexCoords);
 }

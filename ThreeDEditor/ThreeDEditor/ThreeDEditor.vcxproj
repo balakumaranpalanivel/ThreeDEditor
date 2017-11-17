@@ -131,26 +131,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\CCamera.cpp" />
     <ClCompile Include="src\CMesh.cpp" />
     <ClCompile Include="src\CModel.cpp" />
     <ClCompile Include="src\CShader.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\CCamera.h" />
     <ClInclude Include="src\CMesh.h" />
     <ClInclude Include="src\CModel.h" />
     <ClInclude Include="src\CShader.h" />
     <ClInclude Include="src\CTexture.h" />
     <ClInclude Include="src\CVertex.h" />
-    <ClInclude Include="src\teapot.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="src\shaders\modelLoadingFragmentShader.txt" />
     <Text Include="src\shaders\modelLoadingVertexShader.txt" />
-    <Text Include="src\shaders\simpleFragmentShader.txt" />
-    <Text Include="src\shaders\simpleVertexShader.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

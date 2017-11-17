@@ -129,3 +129,11 @@ void CShader::SetMat4(const std::string &name, glm::mat4 value) const
 		GL_FALSE,
 		glm::value_ptr(value));
 }
+
+void CShader::SetVec3(const std::string &name, glm::vec3 value) const
+{
+	glUniform3fv(
+		glGetUniformLocation(glnProgramID, name.c_str()),
+		1,
+		glm::value_ptr(value));
+}
