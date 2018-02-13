@@ -1,8 +1,15 @@
-ThreeDEditor
+# ThreeD Editor
 
-Copy and paste the freeglut and glew dlls from dependencies folder into Debug/Release build folders as required
+An attempt at developing a 3D model loader.
 
-Tags
-1. OpenGLStartupTemplate
-    Contains a basic Project from with OpenGL libraries already linked and ready to code.
-    TODO: Update the Gl, GLm and FreeGlut library versions
+## Features
+
+* FPS Camera Movement
+* Texture Loading
+* Diffuse, Specular and Ambient Lighting
+* Hierarchial Transformations
+* Perspective and Orthographic Cameras
+
+### Demo
+
+* Demo - https://youtu.be/2NW3a-h82-U
